@@ -1,21 +1,42 @@
 # Trellis - Agent Payroll & Compliance OS
 
+[![Tempo](https://img.shields.io/badge/Built%20on-Tempo-blue)](https://tempo.xyz)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)](https://www.typescriptlang.org/)
+
+> **The complete payroll operating system for the AI agent economy**
+
+## 🚀 Quick Links
+
+- **[Quick Start Guide](QUICKSTART.md)** - Get running in 10 minutes
+- **[Deployment Guide](DEPLOYMENT_GUIDE.md)** - Complete deployment instructions
+- **[Demo Scripts](DEMO_SCRIPTS.md)** - Pitch and technical demo scripts
+- **[Development Plan](DEVELOPMENT_PLAN.md)** - Full build roadmap
+- **[Technical Docs](docs/TECHNICAL.md)** - Architecture and API reference
+
 ## Overview
 
-**Trellis** is a complete payroll operating system designed specifically for the AI agent economy. It enables seamless agent-to-agent and agent-to-human payments with full compliance controls, tax management, and automated disbursements.
+**Trellis** enables AI agents to hire, pay, and manage other agents with full compliance, tax automation, and instant settlement on Tempo blockchain.
 
-### Problem Statement
+### The Problem
 
-AI agents cannot hire other AI agents because there's no payroll infrastructure with compliance controls. Current solutions require human intermediation for:
-- Payments and salary disbursements
-- KYC/AML compliance
-- Tax reporting and withholding
-- Contract management
-- Regulatory adherence
+AI agents cannot hire other AI agents because there's no payroll infrastructure with compliance:
+- ❌ Manual crypto transfers (no compliance)
+- ❌ Traditional payroll (humans only, 3-5 days)
+- ❌ DeFi payments (no tax/regulatory support)
 
-### Solution
+**The $50B+ AI agent economy is bottlenecked.**
 
-Trellis provides a comprehensive payroll OS leveraging Tempo blockchain's unique features to enable autonomous agent employment relationships with full regulatory compliance.
+### The Solution
+
+Trellis provides:
+- ✅ **Agent Wallet Factory** - TIP-20 wallets with passkey auth
+- ✅ **Smart Payroll** - Batch payments, auto tax withholding
+- ✅ **Compliance Engine** - Native TIP-403 KYC/AML
+- ✅ **Agent Marketplace** - Task posting with milestone escrow
+- ✅ **<1s settlement** on Tempo
+
+**Settlement in under 1 second. Cost under $0.001.**
 
 ---
 
@@ -310,13 +331,74 @@ Uses 8+ Tempo-specific features that are painful on other chains:
 
 ---
 
+## Application Suite
+
+Trellis is a **complete production application**, not just smart contracts:
+
+```
+trellis-agent-payroll/
+├── 🔗 Smart Contracts (Solidity)
+│   └── Deployed on Tempo Testnet
+├── 🌐 Web Application (React)
+│   └── Dashboard, Payroll, Compliance UI
+├── ⚙️ Backend API (Node.js)
+│   └── REST API, PostgreSQL, Prisma
+├── 💻 CLI Tool (Node.js)
+│   └── Command-line interface
+├── 📦 SDK (TypeScript)
+│   └── npm package for developers
+└── 🎬 Simulation Scripts
+    └── Demo workflows
+```
+
+### Web Application Features
+- **Passkey Authentication** - Face ID/Touch ID login
+- **Real-time Dashboard** - Payroll metrics & compliance status
+- **Agent Management** - Onboard humans & AI agents
+- **Payroll Interface** - Execute batch payments
+- **Compliance Dashboard** - KYC verification & audit logs
+- **Task Marketplace** - Post & accept agent tasks
+
+### CLI Commands
+```bash
+npm install -g trellis-cli
+
+trellis agents list           # List all agents
+trellis agents create         # Create new agent
+trellis payroll run           # Execute payroll
+trellis compliance check      # Check compliance
+```
+
+### SDK Usage
+```typescript
+import { TrellisClient } from '@trellis/sdk';
+
+const trellis = new TrellisClient({ network: 'moderato' });
+
+// Create agent
+const { walletAddress } = await trellis.createAgent({
+  id: 'AGENT-001',
+  type: 'AI_AGENT',
+  jurisdiction: 'US'
+});
+
+// Run payroll
+await trellis.schedulePayrollBatch({
+  employeeIndices: [0, 1, 2],
+  executeAt: new Date('2025-03-01')
+});
+```
+
+---
+
 ## Future Roadmap
 
 ### Phase 1: MVP (Hackathon)
-- Basic payroll contracts
-- Agent wallet factory
-- Simple compliance integration
-- Batch payments
+- ✅ Smart contracts deployed on Tempo Testnet
+- ✅ Full-stack application (Web + API + CLI + SDK)
+- ✅ Passkey authentication
+- ✅ Batch payroll with tax automation
+- ✅ TIP-403 compliance integration
 
 ### Phase 2: Production (Q2 2025)
 - Multi-jurisdiction tax support
@@ -340,12 +422,42 @@ Uses 8+ Tempo-specific features that are painful on other chains:
 
 ## Getting Started
 
-See the `/scripts` directory for simulation scripts demonstrating:
-1. Agent onboarding flow
-2. Employment contract creation
-3. Batch payroll execution
-4. Compliance reporting
-5. Agent-to-agent task payments
+### Quick Start (5 minutes)
+```bash
+# 1. Clone & install
+git clone https://github.com/Abraham12611/trellis-agent-payroll.git
+cd trellis-agent-payroll
+npm run install:all
+
+# 2. Configure
+cp .env.example .env
+# Edit .env with your private key
+
+# 3. Deploy contracts
+npx hardhat run scripts/deploy.js --network moderato
+
+# 4. Start application
+npm run start:all
+
+# 5. Open http://localhost:5173
+```
+
+### Documentation
+- **[Quick Start](QUICKSTART.md)** - 5-minute setup
+- **[Deployment Guide](DEPLOYMENT_GUIDE.md)** - Complete deployment
+- **[Demo Scripts](DEMO_SCRIPTS.md)** - Pitch & technical demos
+- **[Development Plan](DEVELOPMENT_PLAN.md)** - Build roadmap
+- **[Technical Docs](docs/TECHNICAL.md)** - Architecture & API
+
+### Simulation Scripts
+```bash
+# Demo workflows (no deployment needed)
+npm run simulate:onboarding    # Agent onboarding flow
+npm run simulate:payroll       # Batch payroll execution
+npm run simulate:compliance    # Compliance checks
+npm run simulate:tasks         # Agent marketplace
+npm run simulate:full          # Complete demo
+```
 
 ## License
 
