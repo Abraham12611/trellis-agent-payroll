@@ -1,0 +1,39 @@
+{
+  "name": "trellis-agent-payroll",
+  "version": "1.0.0",
+  "description": "Agent Payroll & Compliance OS for Tempo Blockchain",
+  "main": "index.js",
+  "scripts": {
+    "simulate:onboarding": "node scripts/01-agent-onboarding.js",
+    "simulate:payroll": "node scripts/02-batch-payroll.js",
+    "simulate:compliance": "node scripts/03-compliance-check.js",
+    "simulate:tasks": "node scripts/04-agent-tasks.js",
+    "simulate:full": "node scripts/05-full-workflow.js",
+    "deploy:contracts": "hardhat run scripts/deploy.js --network moderato",
+    "test": "hardhat test",
+    "compile": "hardhat compile"
+  },
+  "keywords": [
+    "tempo",
+    "blockchain",
+    "payroll",
+    "ai-agents",
+    "compliance",
+    "tip-20",
+    "web3"
+  ],
+  "author": "Trellis Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "hardhat": "^2.19.0"
+  },
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "ethers": "^6.9.0",
+    "axios": "^1.6.2",
+    "chalk": "^4.1.2",
+    "cli-progress": "^3.12.0",
+    "ora": "^5.4.1"
+  }
+}
