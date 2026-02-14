@@ -2,7 +2,13 @@
   "name": "trellis-agent-payroll",
   "version": "1.0.0",
   "description": "Agent Payroll & Compliance OS for Tempo Blockchain",
-  "main": "index.js",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend",
+    "cli",
+    "sdk"
+  ],
   "scripts": {
     "simulate:onboarding": "node scripts/01-agent-onboarding.js",
     "simulate:payroll": "node scripts/02-batch-payroll.js",
@@ -11,7 +17,13 @@
     "simulate:full": "node scripts/05-full-workflow.js",
     "deploy:contracts": "hardhat run scripts/deploy.js --network moderato",
     "test": "hardhat test",
-    "compile": "hardhat compile"
+    "compile": "hardhat compile",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:cli": "cd cli && npm run dev",
+    "install:all": "npm install && cd frontend && npm install && cd ../backend && npm install && cd ../cli && npm install && cd ../sdk && npm install",
+    "build:all": "npm run compile && cd sdk && npm run build && cd ../cli && npm run build",
+    "start:all": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\""
   },
   "keywords": [
     "tempo",
@@ -26,7 +38,8 @@
   "license": "MIT",
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^4.0.0",
-    "hardhat": "^2.19.0"
+    "hardhat": "^2.19.0",
+    "concurrently": "^8.2.2"
   },
   "dependencies": {
     "dotenv": "^16.3.1",

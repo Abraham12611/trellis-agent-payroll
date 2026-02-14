@@ -1,0 +1,188 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                    String   @id @default(uuid())
+  walletAddress         String?  @unique
+  email                 String?  @unique
+  userType              UserType
+  jurisdiction          String?
+  kycStatus             KycStatus @default(PENDING)
+  riskLevel             RiskLevel @default(MEDIUM)
+  passkeyCredentialId   String?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  agentProfile          AgentProfile?
+  employer              Employer?
+  auditLogs             AuditLog[]
+}
+
+model AgentProfile {
+  id                String    @id @default(uuid())
+  userId            String    @unique
+  agentId           String    @unique
+  agentType         AgentType
+  walletAddress     String
+  contractAddress   String?
+  skills            Json?
+  reputationScore   Decimal   @default(5.00) @db.Decimal(3, 2)
+  tasksCompleted    Int       @default(0)
+  totalEarnings     Decimal   @default(0) @db.Decimal(20, 6)
+  isActive          Boolean   @default(true)
+
+  user              User      @relation(fields: [userId], references: [id])
+  employees         Employee[]
+  tasksPosted       Task[]    @relation("ClientTasks")
+  tasksAssigned     Task[]    @relation("WorkerTasks")
+}
+
+model Employer {
+  id                String   @id @default(uuid())
+  userId            String   @unique
+  companyName       String?
+  companyType       String?
+  taxId             String?
+  billingAddress    Json?
+  subscriptionTier  String   @default("FREE")
+
+  user              User     @relation(fields: [userId], references: [id])
+  employees         Employee[]
+  payrollBatches    PayrollBatch[]
+}
+
+model Employee {
+  id                  String    @id @default(uuid())
+  employerId          String
+  agentProfileId      String
+  employeeId          String
+  salary              Decimal   @db.Decimal(20, 6)
+  taxRate             Int
+  paymentFrequency    Int
+  startDate           DateTime  @default(now())
+  endDate             DateTime?
+  isActive            Boolean   @default(true)
+
+  employer            Employer  @relation(fields: [employerId], references: [id])
+  agentProfile        AgentProfile @relation(fields: [agentProfileId], references: [id])
+  payments            Payment[]
+
+  @@unique([employerId, employeeId])
+}
+
+model PayrollBatch {
+  id                String   @id @default(uuid())
+  employerId        String
+  batchId           String?
+  status            BatchStatus @default(SCHEDULED)
+  totalAmount       Decimal  @db.Decimal(20, 6)
+  totalTax          Decimal  @db.Decimal(20, 6)
+  employeeCount     Int
+  scheduledFor      DateTime
+  executedAt        DateTime?
+  transactionHash   String?
+  createdAt         DateTime @default(now())
+
+  employer          Employer @relation(fields: [employerId], references: [id])
+  payments          Payment[]
+}
+
+model Payment {
+  id                String   @id @default(uuid())
+  batchId           String?
+  employeeId        String?
+  grossAmount       Decimal  @db.Decimal(20, 6)
+  taxAmount         Decimal  @db.Decimal(20, 6)
+  netAmount         Decimal  @db.Decimal(20, 6)
+  memo              String?
+  transactionHash   String?
+  status            PaymentStatus @default(PENDING)
+  paidAt            DateTime?
+
+  batch             PayrollBatch? @relation(fields: [batchId], references: [id])
+  employee          Employee? @relation(fields: [employeeId], references: [id])
+}
+
+model Task {
+  id                String   @id @default(uuid())
+  clientId          String
+  title             String
+  description       String?
+  budget            Decimal  @db.Decimal(20, 6)
+  status            TaskStatus @default(OPEN)
+  requiredSkills    Json?
+  deadline          DateTime?
+  assignedTo        String?
+  createdAt         DateTime @default(now())
+
+  client            AgentProfile @relation("ClientTasks", fields: [clientId], references: [id])
+  worker            AgentProfile? @relation("WorkerTasks", fields: [assignedTo], references: [id])
+}
+
+model AuditLog {
+  id                String   @id @default(uuid())
+  userId            String?
+  action            String
+  entityType        String
+  entityId          String?
+  changes           Json?
+  ipAddress         String?
+  userAgent         String?
+  createdAt         DateTime @default(now())
+
+  user              User?    @relation(fields: [userId], references: [id])
+}
+
+enum UserType {
+  EMPLOYER
+  AGENT
+  ADMIN
+}
+
+enum KycStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+  EXPIRED
+}
+
+enum RiskLevel {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum AgentType {
+  HUMAN
+  AI_AGENT
+  HYBRID
+}
+
+enum BatchStatus {
+  SCHEDULED
+  EXECUTING
+  EXECUTED
+  FAILED
+}
+
+enum PaymentStatus {
+  PENDING
+  PROCESSING
+  CONFIRMED
+  FAILED
+}
+
+enum TaskStatus {
+  OPEN
+  ASSIGNED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}

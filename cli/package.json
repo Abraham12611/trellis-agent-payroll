@@ -1,0 +1,29 @@
+{
+  "name": "trellis-cli",
+  "version": "1.0.0",
+  "description": "Trellis CLI Tool",
+  "main": "dist/index.js",
+  "bin": {
+    "trellis": "./dist/index.js"
+  },
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "@inquirer/prompts": "^3.3.0",
+    "chalk": "^5.3.0",
+    "commander": "^11.1.0",
+    "conf": "^12.0.0",
+    "ethers": "^6.9.0",
+    "ora": "^8.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3",
+    "vitest": "^1.0.0"
+  }
+}
